@@ -1,13 +1,8 @@
 const router = require("express").Router();
-const Order = require("../models/Order");
-const {
-  verifyToken,
-  verifyTokenOptional,
-  verifyTokenAndAuthorization,
-  verifyTokenAndAdmin,
-} = require("./verifyToken");
-const express = require("express");
-const { sendOrderNotification } = require("../utils/mailer");  
+import Order, { findByIdAndUpdate, findByIdAndDelete, find, aggregate } from "../models/Order";
+import { verifyToken, verifyTokenOptional, verifyTokenAndAuthorization, verifyTokenAndAdmin } from "./verifyToken";
+import express from "express";
+import { sendOrderNotification } from "../utils/mailer";  
 
 // CREATE ORDER
 router.post("/", verifyTokenOptional, async (req, res) => {
@@ -30,7 +25,7 @@ router.post("/", verifyTokenOptional, async (req, res) => {
 // UPDATE ORDER
 router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
-    const updatedOrder = await Order.findByIdAndUpdate(
+    const updatedOrder = await findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
       { new: true }
@@ -44,7 +39,7 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
 // DELETE ORDER
 router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
-    await Order.findByIdAndDelete(req.params.id);
+    await findByIdAndDelete(req.params.id);
     res.status(200).json("Porosia eshte fshire nga sistemi . . .");
   } catch (err) {
     res.status(500).json(err);
@@ -54,7 +49,7 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
 // GET USER ORDERS
 router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
   try {
-    const orders = await Order.find({ userId: req.params.userId });
+    const orders = await find({ userId: req.params.userId });
     res.status(200).json(orders);
   } catch (err) {
     res.status(500).json(err);
@@ -64,7 +59,7 @@ router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
 // GET ALL ORDERS
 router.get("/", verifyTokenAndAdmin, async (req, res) => {
   try {
-    const orders = await Order.find();
+    const orders = await find();
     res.status(200).json(orders);
   } catch (err) {
     res.status(500).json(err);
@@ -74,7 +69,7 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
 // GET TOTAL INCOME
 router.get("/income/all", verifyTokenAndAdmin, async (req, res) => {
   try {
-    const income = await Order.aggregate([
+    const income = await aggregate([
       {
         $project: {
           sales: "$amount",
@@ -103,7 +98,7 @@ router.get("/income", verifyTokenAndAdmin, async (req, res) => {
   const prevMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
 
   try {
-    const income = await Order.aggregate([
+    const income = await aggregate([
       {
         $match: {
           createdAt: { $gte: prevMonth },
@@ -134,7 +129,7 @@ router.get("/income", verifyTokenAndAdmin, async (req, res) => {
 // GET INCOME FOR ALL MONTHS
 router.get("/income/all-months", verifyTokenAndAdmin, async (req, res) => {
   try {
-    const income = await Order.aggregate([
+    const income = await aggregate([
       {
         $project: {
           month: { $month: "$createdAt" },
@@ -154,4 +149,4 @@ router.get("/income/all-months", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

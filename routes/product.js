@@ -1,10 +1,6 @@
 const router = require("express").Router();
-const Product = require("../models/Product");
-const {
-  verifyToken,
-  verifyTokenAndAuthorization,
-  verifyTokenAndAdmin,
-} = require("./verifyToken");
+import Product from "../models/Product";
+import { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } from "./verifyToken";
 
 //CREATE
 router.post("/", verifyTokenAndAdmin, async (req, res) => {
@@ -78,4 +74,4 @@ router.get("/", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

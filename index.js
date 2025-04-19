@@ -4,12 +4,13 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
-const userRoute = require("./routes/user");
-const authRoute = require("./routes/auth");
-const productRoute = require("./routes/product");
-const cartRoute = require("./routes/cart");
-const orderRoute = require("./routes/order");
+const userRoute = require("./routes/user").default;
+const authRoute = require("./routes/auth").default;
+const productRoute = require("./routes/product").default;
+const cartRoute = require("./routes/cart").default;
+const orderRoute = require("./routes/order").default;
 app.use(cors());
+
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => console.log("DB po funksionon"))
