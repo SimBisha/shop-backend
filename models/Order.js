@@ -1,6 +1,6 @@
-import { Schema, model } from "mongoose";
+const mongoose = require("mongoose");
 
-const OrderSchema = new Schema(
+const OrderSchema = new mongoose.Schema(
   {
     userId: { type: String, required: true },
     userEmail: { type: String }, // ✅ so we can notify the customer
@@ -20,4 +20,4 @@ const OrderSchema = new Schema(
   { timestamps: true }
 );
 
-export default model("Order", OrderSchema);
+module.exports = mongoose.model("Order", OrderSchema);
