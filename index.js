@@ -72,12 +72,43 @@ const productRoute = require("./routes/product");
 const cartRoute = require("./routes/cart");
 const orderRoute = require("./routes/order");
 
-// Enable CORS - Critical for Cross-Origin Requests
+
+
+const allowedOrigins = [
+  "https://shop-5d140.web.app",   // ✅ production
+  "http://localhost:3000",        // ✅ development
+];
+
 app.use(cors({
-  origin: "http://localhost:3000/",
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true // ✅ important for login, cookies, etc.
 }));
+
+
+
+
+
+
+
+
+
+
+
+// Enable CORS - Critical for Cross-Origin Requests
+// app.use(cors({
+//   origin: "https://shop-backend-4.onrender.com",
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   allowedHeaders: ["Content-Type", "Authorization"]
+// }));
 
 
 
