@@ -74,7 +74,7 @@ const orderRoute = require("./routes/order");
 
 // Enable CORS - Critical for Cross-Origin Requests
 app.use(cors({
-  origin: "https://shop-5d140.web.app", 
+  origin: "http://localhost:3000/",
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
