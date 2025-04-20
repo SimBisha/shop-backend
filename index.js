@@ -74,10 +74,12 @@ const orderRoute = require("./routes/order");
 
 // Enable CORS - Critical for Cross-Origin Requests
 app.use(cors({
-  origin: "https://shop-5d140.web.app", // In production, replace "*" with your frontend URL (e.g., "http://your-frontend.com")
+  origin: "https://shop-5d140.web.app/", // In production, replace "*" with your frontend URL (e.g., "http://your-frontend.com")
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
+
 
 // Middleware for parsing JSON requests
 app.use(express.json());
