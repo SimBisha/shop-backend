@@ -43,13 +43,23 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 //GET Product
-router.get("/find/:id", async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
+// router.get("/find/:id", async (req, res) => {
+//   try {
+//     const product = await Product.findById(req.params.id);
 
-    res.status(200).json(product);
+//     res.status(200).json(product);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
+router.get("/", async (req, res) => {
+  try {
+    const products = await Product.find();
+    console.log(products); // Log products to check the data
+    res.status(200).json(products);
   } catch (err) {
-    res.status(500).json(err);
+    console.error("Error fetching products:", err);
+    res.status(500).json({ message: "Error fetching products", error: err.message });
   }
 });
 
