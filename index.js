@@ -52,10 +52,6 @@
 //   console.log(`Backend server is running on port ${PORT}`);
 // });
 
-
-
-
-
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -72,36 +68,29 @@ const productRoute = require("./routes/product");
 const cartRoute = require("./routes/cart");
 const orderRoute = require("./routes/order");
 
-
-
 const allowedOrigins = [
-  "https://shop-5d140.web.app",   // ✅ production
-  "http://localhost:3000",        // ✅ development
+  "https://beorganic-ks.com",
+  "https://www.beorganic-ks.com", // Add this too, just in case
 ];
-
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log("❌ Blocked by CORS:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true // ✅ important for login, cookies, etc.
-}));
+  credentials: true,
+};
 
+app.use(cors(corsOptions));
 
-
-
-
-
-
-
-
-
+app.get("/api/ping", (req, res) => {
+  res.json({ message: "Pong! Backend is live." });
+});
 
 // Enable CORS - Critical for Cross-Origin Requests
 // app.use(cors({
@@ -110,8 +99,6 @@ app.use(cors({
 //   allowedHeaders: ["Content-Type", "Authorization"]
 // }));
 
-
-
 // Middleware for parsing JSON requests
 app.use(express.json());
 
@@ -119,7 +106,7 @@ app.use(express.json());
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   })
   .then(() => console.log("Database connection established."))
   .catch((err) => {
